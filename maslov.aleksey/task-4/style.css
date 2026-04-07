@@ -1,0 +1,11 @@
+#productsList {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.productCard {
+    border: 1px solid #ccc;
+    padding: 15px;
+    width: 400px;
+}
