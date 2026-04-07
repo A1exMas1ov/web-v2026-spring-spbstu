@@ -10,8 +10,10 @@ function addSupplier(id) {
 function removeSupplier(id) {
     console.log("Удалить поставщика:", id);
 }
-function deleteProduct(id) {
-    console.log("Удалить товар:", id);
+function deleteProduct(id) { 
+    console.log("Удаление товара:", id);
+    products = products.filter(p => p.id !== id);
+    render();
 }
 
 function render() {
@@ -21,14 +23,23 @@ function render() {
     products.forEach(product => {
         const card = document.createElement('div');
         card.className = 'productCard';
+        const suppliersListHtml = product.suppliers.map(s => `
+            <div class="supplierItem">
+                <span>${s}</span>
+                <button class="btnDeleteSmall" onclick="removeSupplier(${product.id}, '${s}')">x</button>
+            </div>
+        `).join('');
+
         card.innerHTML = `
-            <h3>${product.name}</h3>
-            <p><strong>Поставщики:</strong> ${product.suppliers.join(', ') || 'Нет'}</p>
-            <p><strong>Количество:</strong> ${product.supplierCount}</p>
+            <h3>${product.name} (ID: ${product.id})</h3>
+            <p><strong>Количество поставщиков:</strong> ${product.supplierCount}</p>
+            
+            <div class="suppliersContainer">
+                ${suppliersListHtml || '<p>Нет поставщиков</p>'}
+            </div>
 
             <div class="cardActions">
                 <button onclick="addSupplier(${product.id})">Добавить поставщика</button>
-                <button onclick="removeSupplier(${product.id})">Удалить поставщика</button>
                 <button class="btnDelete" onclick="deleteProduct(${product.id})">Удалить товар</button>
             </div>
         `;
