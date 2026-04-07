@@ -6,8 +6,17 @@ let products = [
 ];
 
 function addSupplier(id) {
-    console.log("Добавление поставщика:", id);
+    const name = prompt('Введите имя поставщика:');
+    const product = products.find(p => p.id === id);
+    try {
+        product.addSupplier(name.trim());
+    } catch(e) {
+        alert(e.message);
+        return;
+    }
+    render();
 }
+
 function removeSupplier(id) {
     console.log("Удаление поставщика:", id);
 }
