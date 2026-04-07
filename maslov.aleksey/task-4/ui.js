@@ -17,11 +17,18 @@ function addSupplier(id) {
     render();
 }
 
-function removeSupplier(id) {
-    console.log("Удаление поставщика:", id);
+function removeSupplier(id, name) {
+    const product = products.find(p => p.id === id);
+    try {
+        product.removeSupplier(name);
+    } catch(e) {
+        alert(e.message);
+        return;
+    }
+    render();
 }
-function deleteProduct(id) { 
-    console.log("Удаление товара:", id);
+
+function deleteProduct(id) {
     products = products.filter(p => p.id !== id);
     render();
 }
