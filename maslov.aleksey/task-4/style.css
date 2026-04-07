@@ -9,3 +9,9 @@
     padding: 15px;
     width: 400px;
 }
+
+.cardActions, .formSection form {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}

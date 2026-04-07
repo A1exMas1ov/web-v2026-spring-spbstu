@@ -9,8 +9,15 @@
     <header>
         <h1>Товары</h1>
     </header>
+    <h3>Добавить новый товар</h3>
+    <form id="productForm">
+        <input type="text" id="prodName" placeholder="Название товара" required>
+        <input type="text" id="prodSuppliers" placeholder="Поставщики">
+        <button type="submit">Добавить товар</button>
+    </form>
     <div id="productsList"></div>
     <script src="product.js"></script>
+    <script src="productUtils.js"></script>
     <script src="ui.js"></script>
   </body>
 </html>
