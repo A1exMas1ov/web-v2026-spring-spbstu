@@ -33,4 +33,8 @@ class Product {
     if (index === -1) throw new Error(`"${name}" not found`);
     this.#suppliers.splice(index, 1);
   }
+
+  toJSON() {
+    return {id: this.#id, name: this.#name, suppliers: this.#suppliers};
+  }
 }

@@ -1,9 +1,37 @@
+const LS_KEY = 'products_v1';
+
 let nextId = 4;
-let products = [
-    new Product(1, "prod1", ["supp1_1", "supp1_2"]),
-    new Product(2, "prod2", ["supp2_1"]),
-    new Product(3, "prod3", ["supp3_1", "supp3_2"])
-];
+let products = [];
+
+function saveToLS() {
+    localStorage.setItem(LS_KEY, JSON.stringify({
+        nextId,
+        products: products.map(p => p.toJSON())
+    }));
+}
+
+function loadFromLS() {
+    try {
+        const raw = localStorage.getItem(LS_KEY);
+        if (!raw) return false;
+        const data = JSON.parse(raw);
+        nextId = data.nextId;
+        products = data.products.map(d => new Product(d.id, d.name, d.suppliers));
+        return true;
+    } catch(e) {
+        return false;
+    }
+}
+
+if (!loadFromLS()) {
+    products = [
+        new Product(1, "prod1", ["supp1_1", "supp1_2"]),
+        new Product(2, "prod2", ["supp2_1"]),
+        new Product(3, "prod3", ["supp3_1", "supp3_2"])
+    ];
+}
+
+window.addEventListener('beforeunload', saveToLS);
 
 function asyncOp(fn) {
     return new Promise((resolve, reject) => {
@@ -16,6 +44,7 @@ function asyncOp(fn) {
 
 function addSupplier(id) {
     const name = prompt('Введите имя поставщика:');
+    if (!name) return;
 
     asyncOp(() => {
         const product = products.find(p => p.id === id);
