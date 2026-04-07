@@ -1,3 +1,4 @@
+let nextId = 4;
 let products = [
     new Product(1, "prod1", ["supp1_1", "supp1_2"]),
     new Product(2, "prod2", ["supp2_1"]),
@@ -5,16 +6,31 @@ let products = [
 ];
 
 function addSupplier(id) {
-    console.log("Добавить поставщика:", id);
+    console.log("Добавление поставщика:", id);
 }
 function removeSupplier(id) {
-    console.log("Удалить поставщика:", id);
+    console.log("Удаление поставщика:", id);
 }
 function deleteProduct(id) { 
     console.log("Удаление товара:", id);
     products = products.filter(p => p.id !== id);
     render();
 }
+
+document.getElementById('productForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById('prodName').value.trim();
+    if (!name) return;
+    const suppliersRaw = document.getElementById('prodSuppliers').value.trim();
+    const suppliers = suppliersRaw ? suppliersRaw.split(',').map(s => s.trim()) : [];
+
+    const product = new Product(nextId++, name, suppliers);
+    products.push(product);
+
+    this.reset();
+    render();
+});
 
 function render() {
     const container = document.getElementById('productsList');
