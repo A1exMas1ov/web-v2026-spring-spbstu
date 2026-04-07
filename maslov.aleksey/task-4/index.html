@@ -16,6 +16,21 @@
         <button type="submit">Добавить товар</button>
     </form>
     <hr>
+    <h3>Утилиты</h3>
+    <div>
+        <button onclick="showUniqueSuppliers()">Уникальные поставщики</button>
+        <button onclick="showMaxSuppliers()">Макс. поставщиков</button>
+    </div>
+    <div>
+        <input type="text" id="filterSupplierInput" placeholder="Имя поставщика">
+        <button onclick="showBySupplier()">Найти по поставщику</button>
+    </div>
+    <div>
+        <button onclick="showGroupBySupplier()">Группировать по поставщику</button>
+        <button onclick="showGroupByCount()">Группировать по количеству</button>
+        <button onclick="resetView()">Сбросить</button>
+    </div>
+    <hr>
     <div id="productsList"></div>
     <script src="product.js"></script>
     <script src="productUtils.js"></script>

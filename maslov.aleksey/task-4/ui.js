@@ -81,11 +81,16 @@ document.getElementById('productForm').addEventListener('submit', function(e) {
     }).then(() => { this.reset(); render(); });
 });
 
-function render() {
+function renderList(list, title = '') {
     const container = document.getElementById('productsList');
-    container.innerHTML = '';
+    container.innerHTML = title ? `<h4>${title}</h4>` : '';
 
-    products.forEach(product => {
+    if (!list.length) {
+        container.innerHTML += '<p>Нет товаров</p>';
+        return;
+    }
+
+    list.forEach(product => {
         const card = document.createElement('div');
         card.className = 'productCard';
         const suppliersListHtml = product.suppliers.map(s => `
@@ -111,6 +116,56 @@ function render() {
 
         container.appendChild(card);
     });
+}
+
+function render() {
+    renderList(products);
+}
+
+function showUniqueSuppliers() {
+    const list = uniqueSuppliers(products);
+    alert('Все поставщики:\n' + (list.length ? list.join('\n') : 'нет'));
+}
+
+function showMaxSuppliers() {
+    const list = maxSupplierProducts(products);
+    alert('Товары с макс. поставщиками:\n' + list.map(p => `${p.name} (${p.supplierCount})`).join('\n'));
+}
+
+function showBySupplier() {
+    const name = document.getElementById('filterSupplierInput').value.trim();
+    if (!name) return alert('Введите имя поставщика');
+    const list = productsBySupplier(products, name);
+    renderList(list.length ? list : [], `Товары с поставщиком "${name}"`);
+}
+
+function showGroupBySupplier() {
+    const grouped = groupBySupplier(products);
+    const flat = [];
+    const seenIds = new Set(); // Используем Set для отслеживания уже добавленных ID
+
+    for (const [supplier, items] of Object.entries(grouped)) {
+        items.forEach(p => {
+            if (!seenIds.has(p.id)) {
+                flat.push(p);
+                seenIds.add(p.id);
+            }
+        });
+    }
+    renderList(flat, 'Группировка по поставщику (без дубликатов)');
+}
+
+function showGroupByCount() {
+    const grouped = groupBySupplierCount(products);
+    const flat = [];
+    for (const count of Object.keys(grouped).sort((a, b) => b - a)) {
+        grouped[count].forEach(p => flat.push(p));
+    }
+    renderList(flat, 'Группировка по количеству поставщиков');
+}
+
+function resetView() {
+    render();
 }
 
 render();
