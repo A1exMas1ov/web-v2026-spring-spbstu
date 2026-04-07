@@ -5,47 +5,51 @@ let products = [
     new Product(3, "prod3", ["supp3_1", "supp3_2"])
 ];
 
+function asyncOp(fn) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            try { resolve(fn()); }
+            catch(e) { reject(e); }
+        }, 300);
+    });
+}
+
 function addSupplier(id) {
     const name = prompt('Введите имя поставщика:');
-    const product = products.find(p => p.id === id);
-    try {
+
+    asyncOp(() => {
+        const product = products.find(p => p.id === id);
         product.addSupplier(name.trim());
-    } catch(e) {
-        alert(e.message);
-        return;
-    }
-    render();
+    })
+    .then(() => render())
+    .catch(e => alert(e.message));
 }
 
 function removeSupplier(id, name) {
-    const product = products.find(p => p.id === id);
-    try {
+    asyncOp(() => {
+        const product = products.find(p => p.id === id);
         product.removeSupplier(name);
-    } catch(e) {
-        alert(e.message);
-        return;
-    }
-    render();
+    })
+    .then(() => render())
+    .catch(e => alert(e.message));
 }
 
 function deleteProduct(id) {
-    products = products.filter(p => p.id !== id);
-    render();
+    asyncOp(() => {
+        products = products.filter(p => p.id !== id);
+    }).then(() => render());
 }
 
 document.getElementById('productForm').addEventListener('submit', function(e) {
     e.preventDefault();
-
     const name = document.getElementById('prodName').value.trim();
     if (!name) return;
     const suppliersRaw = document.getElementById('prodSuppliers').value.trim();
-    const suppliers = suppliersRaw ? suppliersRaw.split(',').map(s => s.trim()) : [];
+    const suppliers = suppliersRaw ? suppliersRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
 
-    const product = new Product(nextId++, name, suppliers);
-    products.push(product);
-
-    this.reset();
-    render();
+    asyncOp(() => {
+        products.push(new Product(nextId++, name, suppliers));
+    }).then(() => { this.reset(); render(); });
 });
 
 function render() {
