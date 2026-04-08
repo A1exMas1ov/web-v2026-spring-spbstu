@@ -1,0 +1,38 @@
+#productsList {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.productCard {
+    border: 1px solid #ccc;
+    padding: 15px;
+    width: 400px;
+}
+
+.cardActions, .formSection form {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.suppliersContainer {
+    margin: 10px 0;
+    padding: 5px;
+}
+
+.supplierItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.btnDeleteSmall {
+    cursor: pointer;
+}
+
+.btnDelete {
+    cursor: pointer;
+}
