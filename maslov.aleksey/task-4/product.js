@@ -23,14 +23,20 @@ class Product {
   }
 
   addSupplier(name) {
-    if (!name) throw new Error("Name cannot be empty");
-    if (this.#suppliers.includes(name)) throw new Error(`"${name}" already added`);
+    if (!name) {
+      throw new Error("Name cannot be empty");
+    }
+    if (this.#suppliers.includes(name)) {
+      throw new Error(`"${name}" already added`);
+    }
     this.#suppliers.push(name);
   }
 
   removeSupplier(name) {
     const index = this.#suppliers.indexOf(name);
-    if (index === -1) throw new Error(`"${name}" not found`);
+    if (index === -1) {
+      throw new Error(`"${name}" not found`);
+    }
     this.#suppliers.splice(index, 1);
   }
 

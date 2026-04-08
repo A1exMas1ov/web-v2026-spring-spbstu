@@ -36,16 +36,17 @@ window.addEventListener('beforeunload', saveToLS);
 function asyncOp(fn) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
-            try { resolve(fn()); }
-            catch(e) { reject(e); }
+            try {
+                resolve(fn()); saveToLS();
+            } catch(e) {
+                reject(e);
+            }
         }, 300);
     });
 }
 
 function addSupplier(id) {
     const name = prompt('Введите имя поставщика:');
-    if (!name) return;
-
     asyncOp(() => {
         const product = products.find(p => p.id === id);
         product.addSupplier(name.trim());
@@ -72,7 +73,9 @@ function deleteProduct(id) {
 document.getElementById('productForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const name = document.getElementById('prodName').value.trim();
-    if (!name) return;
+    if (!name) {
+        return;
+    }
     const suppliersRaw = document.getElementById('prodSuppliers').value.trim();
     const suppliers = suppliersRaw ? suppliersRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
 
@@ -101,7 +104,7 @@ function renderList(list, title = '') {
         `).join('');
 
         card.innerHTML = `
-            <h3>${product.name} (ID: ${product.id})</h3>
+            <h3>${product.name}</h3>
             <p><strong>Количество поставщиков:</strong> ${product.supplierCount}</p>
             
             <div class="suppliersContainer">
@@ -134,34 +137,43 @@ function showMaxSuppliers() {
 
 function showBySupplier() {
     const name = document.getElementById('filterSupplierInput').value.trim();
-    if (!name) return alert('Введите имя поставщика');
+    if (!name) {
+        return alert('Введите имя поставщика');
+    }
     const list = productsBySupplier(products, name);
     renderList(list.length ? list : [], `Товары с поставщиком "${name}"`);
 }
 
 function showGroupBySupplier() {
     const grouped = groupBySupplier(products);
-    const flat = [];
-    const seenIds = new Set(); // Используем Set для отслеживания уже добавленных ID
+    const container = document.getElementById('productsList');
+    container.innerHTML = '<h3>Группировка по поставщику</h3>';
 
     for (const [supplier, items] of Object.entries(grouped)) {
+        container.innerHTML += `<h3>Поставщик: ${supplier}</h3>`;
         items.forEach(p => {
-            if (!seenIds.has(p.id)) {
-                flat.push(p);
-                seenIds.add(p.id);
-            }
+            const card = document.createElement('div');
+            card.className = 'productCard';
+            card.innerHTML = `<h4>${p.name}</h4>`;
+            container.appendChild(card);
         });
     }
-    renderList(flat, 'Группировка по поставщику (без дубликатов)');
 }
 
 function showGroupByCount() {
     const grouped = groupBySupplierCount(products);
-    const flat = [];
+    const container = document.getElementById('productsList');
+    container.innerHTML = '<h3>Группировка по количеству поставщиков</h3>';
+
     for (const count of Object.keys(grouped).sort((a, b) => b - a)) {
-        grouped[count].forEach(p => flat.push(p));
+        container.innerHTML += `<h3>Поставщиков: ${count}</h3>`;
+        grouped[count].forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'productCard';
+            card.innerHTML = `<h4>${p.name}</h4>`;
+            container.appendChild(card);
+        });
     }
-    renderList(flat, 'Группировка по количеству поставщиков');
 }
 
 function resetView() {

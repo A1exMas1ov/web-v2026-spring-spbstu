@@ -31,9 +31,9 @@ function groupBySupplierCount(products) {
 }
 
 function maxSupplierProducts(products) {
-  if (!products.length) {
-    return [];
-  }
-  const max = Math.max(...products.map(p => p.supplierCount));
-  return products.filter(p => p.supplierCount === max);
+    if (!products.length) {
+        return [];
+    }
+    const max = Math.max(...products.map(p => p.supplierCount));
+    return products.filter(p => p.supplierCount === max);
 }
